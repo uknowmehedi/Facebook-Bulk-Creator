@@ -1,7 +1,22 @@
 PyQt6
-playwright
 imapclient
-beautifulsoup4
 httpx
 pyee
 tk
+
+# --- GUI and Web Framework ---
+streamlit
+
+# --- Browser Automation ---
+playwright
+
+# --- Email and Parsing ---
+beautifulsoup4
+lxml
+
+# --- Miscellaneous (optional but helpful) ---
+python-dotenv
+requests
+
+# --- For packaging (if building .exe or .AppImage later) ---
+pyinstaller

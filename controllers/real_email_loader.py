@@ -76,8 +76,8 @@ def get_email_usage_stats():
 
     available = max(total - used, 0)
 
-    print(f"📧 Total Emails:     {total}")
-    print(f"✅ Used Emails:      {used}")
-    print(f"🟢 Unused Available: {available}")
+    log_message(f"📧 Total Emails:     {total}")
+log_message(f"✅ Used Emails:      {used}")
+log_message(f"🟢 Unused Available: {available}")
 
     return total, used, available

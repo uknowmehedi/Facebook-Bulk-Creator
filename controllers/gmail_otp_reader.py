@@ -1,4 +1,3 @@
-
 # Gmail OTP Reader
 # Connects to Gmail via IMAP to fetch OTP from unread messages
 

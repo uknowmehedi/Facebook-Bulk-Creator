@@ -135,3 +135,65 @@ class MainWindow(QMainWindow):
 
         panel.setLayout(layout)
         return panel
+
+
+# Themes panel — Toggle Light/Dark mode
+    def themes_panel(self):
+        panel = QWidget()
+        layout = QVBoxLayout()
+        self.theme_toggle = QCheckBox("Toggle Dark Mode")
+        self.theme_toggle.stateChanged.connect(self.toggle_theme)
+        layout.addWidget(self.theme_toggle)
+        panel.setLayout(layout)
+        return panel
+
+    # Developer panel — Shows Telegram contact and quote
+    def developer_panel(self):
+        panel = QWidget()
+        layout = QVBoxLayout()
+        link = QLabel('<a href="https://t.me/uKnowMehedi">🔗 Telegram: @uKnowMehedi</a>')
+        link.setOpenExternalLinks(True)
+        layout.addWidget(link)
+        layout.addWidget(QLabel("🤓 Smart work will give you a better opportunity."))
+        panel.setLayout(layout)
+        return panel
+
+    # Switch active panel when sidebar selection changes
+    def display_panel(self, index):
+        self.panels.setCurrentIndex(index)
+
+    # Toggle Light/Dark Theme using checkbox
+    def toggle_theme(self, state):
+        if state == Qt.CheckState.Checked.value:
+            self.setStyleSheet("background-color: #2e2e2e; color: white;")
+        else:
+            self.setStyleSheet("background-color: #f0f0f0; color: black;")
+
+    # ▶️ START Automation button is clicked
+    def start_account_creation(self):
+        print("▶️ Starting account creation with headless tabs...")
+
+        from controllers.automation import start_account_creation
+        from PyQt6.QtWidgets import QMessageBox
+        import threading
+        from controllers.export_logs import export_results
+        import logging
+
+        # Setup logging format
+        logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(message)s', datefmt='%H:%M:%S')
+
+        # Will launch automation in background (next step)
+
+    # Export logs manually from Logs panel button
+    def export_logs(self):
+        from PyQt6.QtWidgets import QMessageBox
+        # Dummy sample data — can be replaced with real runtime stats
+        success = ["user123456"]
+        failed = ["Tab 1"]
+        emails = ["demo@gmail.com"]
+        success_path, failed_path, email_path = export_results(success, failed, emails)
+
+        msg = QMessageBox()
+        msg.setWindowTitle("Export Complete")
+        msg.setText(f"✅ Exported to:\n{success_path}\n{failed_path}")
+        msg.exec()

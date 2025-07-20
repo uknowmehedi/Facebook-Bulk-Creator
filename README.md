@@ -105,6 +105,56 @@ Use tools like `nuitka` or `appimage-builder` for advanced builds.
 
 ---
 
+# For windows 10/11
+# ✅ STEP-BY-STEP SETUP FOR FACEBOOK ACCOUNT CREATOR (Windows 11)
+
+# --- 1. Install Python 3.9+ ---
+# Download and install from: https://www.python.org/downloads/windows/
+# ✅ IMPORTANT: Check "Add Python to PATH" during install
+
+# Verify installation:
+python --version
+pip --version
+
+# --- 2. Install Git ---
+# Download and install from: https://git-scm.com/download/win
+# Use default settings.
+
+# Verify installation:
+git --version
+
+# --- 3. Install Microsoft C++ Build Tools (required for some Python packages) ---
+# Download from: https://visualstudio.microsoft.com/visual-cpp-build-tools/
+# ✅ During install, check:
+#   - "C++ build tools"
+#   - "Windows 10 SDK"
+
+# --- 4. Install Node.js (Playwright needs it for browser support) ---
+# Download from: https://nodejs.org/
+# Use LTS version.
+
+# Verify installation:
+node -v
+npm -v
+
+# --- 5. (Optional but Recommended) Install VS Code ---
+# https://code.visualstudio.com/
+
+# --- 6. Clone the Repository ---
+mkdir FacebookAccountCreator
+cd FacebookAccountCreator
+git clone https://github.com/your-username/facebook-account-creator.git
+cd facebook-account-creator
+
+# --- 7. Install Python dependencies ---
+pip install -r requirements.txt
+
+# --- 8. Install Playwright browsers ---
+playwright install
+
+# --- 9. Run the GUI app ---
+streamlit run dashboard.py
+
 ## 🧑‍💻 Author
 
 Developed by **Rabbit Fighter**  

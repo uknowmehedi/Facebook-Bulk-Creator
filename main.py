@@ -65,3 +65,73 @@ class MainWindow(QMainWindow):
         self.panels.addWidget(self.logs_panel())
         self.panels.addWidget(self.themes_panel())
         self.panels.addWidget(self.developer_panel())
+
+
+# Home panel with the main Start button
+    def home_panel(self):
+        panel = QWidget()
+        layout = QVBoxLayout()
+        label = QLabel("🚀 Start New Account Creation")
+        start_button = QPushButton("Start Account Creation (Headless Tabs)")
+        start_button.clicked.connect(self.start_account_creation)  # Triggers automation
+        layout.addWidget(label)
+        layout.addWidget(start_button)
+        panel.setLayout(layout)
+        return panel
+
+    # Tracker panel: displays static tracker status messages
+    def tracker_panel(self):
+        panel = QWidget()
+        layout = QVBoxLayout()
+        layout.addWidget(QLabel("✅ Account Created Successfully"))
+        layout.addWidget(QLabel("❌ OTP Verification Failed – Retrying..."))
+        panel.setLayout(layout)
+        return panel
+
+    # Retry configuration panel
+    def retry_panel(self):
+        panel = QWidget()
+        layout = QVBoxLayout()
+        layout.addWidget(QLabel("Max Attempts:"))
+        self.attempts_spin = QSpinBox()
+        self.attempts_spin.setValue(3)
+        layout.addWidget(self.attempts_spin)
+
+        layout.addWidget(QLabel("Delay (sec):"))
+        self.delay_spin = QSpinBox()
+        self.delay_spin.setValue(30)
+        layout.addWidget(self.delay_spin)
+
+        self.fallback_checkbox = QCheckBox("Enable Fallback")
+        layout.addWidget(self.fallback_checkbox)
+        panel.setLayout(layout)
+        return panel
+
+    # Email preview panel — shows current Gmail account being used
+    def email_panel(self):
+        panel = QWidget()
+        layout = QVBoxLayout()
+        layout.addWidget(QLabel("📧 Current Email: demo@example.com"))
+        layout.addWidget(QLabel("🟡 App Password: ✅ Enabled"))
+        layout.addWidget(QLabel("🔄 Status: Not Used"))
+        panel.setLayout(layout)
+        return panel
+
+    # Logs panel — real-time logs + Export button
+    def logs_panel(self):
+        panel = QWidget()
+        layout = QVBoxLayout()
+        layout.addWidget(QLabel("📜 Real-time logs will appear here..."))
+
+        # QPlainTextEdit for live logging
+        self.log_output = QPlainTextEdit()
+        self.log_output.setReadOnly(True)
+        layout.addWidget(self.log_output)
+
+        # Export logs to JSON
+        export_button = QPushButton("Export Logs to JSON")
+        export_button.clicked.connect(self.export_logs)
+        layout.addWidget(export_button)
+
+        panel.setLayout(layout)
+        return panel

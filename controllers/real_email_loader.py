@@ -1,5 +1,6 @@
 import random
 from pathlib import Path
+from dashboard import log_message  # Import from your GUI file
 
 # Paths to data files
 GMAIL_FILE = Path("assets/gmail_address.txt")
@@ -40,8 +41,15 @@ def mark_email_used(email, app_pw):
     """
     Marks a Gmail account as used.
     """
+    entry = f"{email}|{app_pw}"
+    if USED_FILE.exists():
+        with open(USED_FILE, "r") as f:
+            used = set(line.strip() for line in f)
+        if entry in used:
+            return  # Already marked
+
     with open(USED_FILE, "a") as f:
-        f.write(f"{email}|{app_pw}\n")
+        f.write(f"{entry}\n")
 
 
 def reset_used_emails():
@@ -50,12 +58,9 @@ def reset_used_emails():
     """
     if USED_FILE.exists():
         USED_FILE.unlink()
-
-from dashboard import log_message  
-# Import from your GUI file
-
-log_message("🔄 All used emails have been reset.")
-log_message("⚠️ No used email file found to reset.")
+        log_message("🔄 All used emails have been reset.")
+    else:
+        log_message("⚠️ No used email file found to reset.")
 
 
 def get_email_usage_stats():
@@ -77,7 +82,7 @@ def get_email_usage_stats():
     available = max(total - used, 0)
 
     log_message(f"📧 Total Emails:     {total}")
-log_message(f"✅ Used Emails:      {used}")
-log_message(f"🟢 Unused Available: {available}")
+    log_message(f"✅ Used Emails:      {used}")
+    log_message(f"🟢 Unused Available: {available}")
 
     return total, used, available

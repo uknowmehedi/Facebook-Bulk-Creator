@@ -197,3 +197,33 @@ class MainWindow(QMainWindow):
         msg.setWindowTitle("Export Complete")
         msg.setText(f"✅ Exported to:\n{success_path}\n{failed_path}")
         msg.exec()
+
+# Read all config values from GUI before launching automation
+            max_attempts = self.attempts_spin.value()
+            delay = self.delay_spin.value()
+            fallback = self.fallback_checkbox.isChecked()
+
+            # Start automation with user settings
+            created, failed = start_account_creation(
+                headless=headless,
+                max_tabs=max_tabs,
+                max_attempts=max_attempts,
+                delay=delay,
+                fallback_enabled=fallback
+            )
+
+            # Show popup when automation is done
+            msg = QMessageBox()
+            msg.setWindowTitle("Automation Complete")
+            msg.setText(f"✅ Created: {len(created)}\n❌ Failed: {len(failed)}")
+            msg.exec()
+
+        # Launch automation in a background thread (non-blocking)
+        threading.Thread(target=run_automation).start()
+
+
+# 🟢 Start the GUI Application
+app = QApplication(sys.argv)
+window = MainWindow()
+window.show()
+sys.exit(app.exec())

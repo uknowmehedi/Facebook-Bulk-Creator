@@ -1,23 +1,28 @@
 account_creator/
-├── assets/
-│   ├── names.json                  # List of first names for account creation
-│   └── gmail_address.txt           # Gmail | App Password combo list (one per line)
+├── main.py                       # ✅ GUI Launcher (PyQt6)
+│                                 # - Sidebar navigation
+│                                 # - Headless toggle, retry panel
+│                                 # - Real-time GUI log viewer
+│                                 # - Starts account creation loop
 │
-├── controllers/
-│   ├── automation.py               # Infinite loop Facebook account creator using Playwright
-│   ├── gmail_otp_reader.py         # Reads OTP from Gmail via IMAP
-│   ├── export_logs.py              # Exports success/failure logs to JSON
+├── requirements.txt              # 📦 Python dependencies
+│                                 # - PyQt6, Playwright, IMAP, etc.
 │
-├── logs/
-│   └── success_accounts_*.json    # Created accounts
-│   └── failed_accounts_*.json     # Failed accounts
-│   └── used_emails_*.json         # Optional used Gmail records
+├── README.md                     # 📘 How to run and configure the project
+├── build.bat                     # 🪟 Windows build script (.exe via pyinstaller)
+├── build.sh                      # 🐧 Linux/AppImage launcher script
 │
-├── ui/                             # (Optional for later modular GUI splitting)
-│   └── (not used in current version, reserved for future)
+├── assets/                       # 📥 Input Files
+│   ├── names.json                # - First name list for random name generation
+│   └── gmail_address.txt         # - Gmail address | App Password (one per line)
 │
-├── main.py                         # 🚀 Main GUI launcher (PyQt6)
-├── requirements.txt                # Python dependencies (Playwright, PyQt6, etc.)
-├── build.bat                       # Windows .exe build script (uses pyinstaller)
-├── build.sh                        # Linux launch or AppImage build script
-├── README.md                       # 📘 Usage instructions (how to run/setup)
+├── logs/                         # 🗂️ Output folder (auto-created)
+│   ├── success_accounts_*.json  # - Successfully created accounts
+│   ├── failed_accounts_*.json   # - Failed attempts
+│   └── used_emails_*.json       # - Used Gmail log (optional)
+│
+├── controllers/                  # 🧠 Core Logic Files
+│   ├── automation.py             # - Infinite Facebook signup loop (5 tabs/batch)
+│   │                             # - Uses Playwright and OTP integration
+│   ├── gmail_otp_reader.py       # - IMAP Gmail OTP fetcher
+│   └── export_logs.py            # - Writes JSON export of success/fail data

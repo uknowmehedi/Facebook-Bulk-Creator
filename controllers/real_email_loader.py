@@ -50,9 +50,12 @@ def reset_used_emails():
     """
     if USED_FILE.exists():
         USED_FILE.unlink()
-        print("🔄 All used emails have been reset.")
-    else:
-        print("⚠️ No used email file found to reset.")
+
+from dashboard import log_message  
+# Import from your GUI file
+
+log_message("🔄 All used emails have been reset.")
+log_message("⚠️ No used email file found to reset.")
 
 
 def get_email_usage_stats():

@@ -1,1 +1,14 @@
-
+{
+  "male": [
+    "Jashim", "Rubel", "Nayeem", "Rony", "Tanvir", "Mizan", "Sabbir", "Mamun",
+    "Faruk", "Sohan", "Rasel", "Shanto", "Kawsar", "Imran", "Faisal"
+  ],
+  "female": [
+    "Moushumi", "Tania", "Shabnur", "Mahi", "Nusrat", "Rimi", "Poly", "Ruma",
+    "Priya", "Mim", "Nishi", "Tumpa", "Jannat", "Sumaiya", "Farzana"
+  ],
+  "last": [
+    "Hossain", "Rahman", "Ahmed", "Khan", "Chowdhury", "Hasan", "Siddique",
+    "Alam", "Kabir", "Sarker", "Biswas", "Talukder", "Bhuiyan", "Mollah", "Barua"
+  ]
+}

@@ -1,22 +1,25 @@
+# --- GUI Frameworks ---
 PyQt6
-imapclient
-httpx
-pyee
 tk
 
-# --- GUI and Web Framework ---
+# --- IMAP + Email Client ---
+imapclient
+pyee  # Dependency for async event handling (used in some Playwright internals)
+
+# --- Async HTTP & Email Parsing ---
+httpx
+beautifulsoup4
+lxml
+
+# --- GUI & Web Frontend ---
 streamlit
 
 # --- Browser Automation ---
 playwright
 
-# --- Email and Parsing ---
-beautifulsoup4
-lxml
-
-# --- Miscellaneous (optional but helpful) ---
-python-dotenv
+# --- Miscellaneous ---
 requests
+python-dotenv
 
-# --- For packaging (if building .exe or .AppImage later) ---
+# --- Build for Windows/Linux Packaging ---
 pyinstaller

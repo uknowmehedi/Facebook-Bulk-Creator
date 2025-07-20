@@ -1,229 +1,213 @@
-# Account Creator GUI Application
-# Developed using PyQt6
-# GUI controls Playwright-based Facebook automation with Gmail OTP
+# main.py
+# Telegram-style GUI for Facebook Automation
+# Built using PyQt6
 
-import logging
-
-# Custom logging handler to show logs inside the GUI log box (QPlainTextEdit)
-class LogHandler(logging.Handler):
-    def __init__(self, output_widget):
-        super().__init__()
-        self.output_widget = output_widget
-
-    def emit(self, record):
-        msg = self.format(record)
-        self.output_widget.appendPlainText(msg)
-
-# Standard PyQt6 imports
 import sys
+import threading
+import logging
 from PyQt6.QtWidgets import (
-    QPlainTextEdit, QApplication, QMainWindow, QWidget,
-    QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QListWidget,
-    QStackedWidget, QCheckBox, QSpinBox, QComboBox
+    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+    QPushButton, QLabel, QListWidget, QStackedWidget, QCheckBox,
+    QSpinBox, QPlainTextEdit, QMessageBox
 )
 from PyQt6.QtCore import Qt
 
-# Main GUI window class
+# Custom handler to show logs in GUI console
+class LogHandler(logging.Handler):
+    def __init__(self, widget):
+        super().__init__()
+        self.widget = widget
+
+    def emit(self, record):
+        msg = self.format(record)
+        self.widget.appendPlainText(msg)
+
+# Main GUI class
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Account Creator")
-        self.setGeometry(100, 100, 1158, 540)
+        self.setWindowTitle("Facebook Bulk Creator")
+        self.setGeometry(100, 100, 1100, 580)
         self.setStyleSheet("background-color: #f0f0f0;")
 
-        # Main horizontal layout that holds sidebar and main content
+        # Main layout
         main_layout = QHBoxLayout()
         central_widget = QWidget()
         central_widget.setLayout(main_layout)
         self.setCentralWidget(central_widget)
 
-        # Setup log redirection from console to GUI Logs panel
-        self.logger_handler = LogHandler(self.log_output)
-        self.logger_handler.setFormatter(logging.Formatter('[%(asctime)s] %(message)s', datefmt='%H:%M:%S'))
-        logging.getLogger().addHandler(self.logger_handler)
-        logging.getLogger().setLevel(logging.INFO)
-
-        # Sidebar for navigation
+        # Sidebar
         self.sidebar = QListWidget()
         self.sidebar.addItems([
             "Home", "Tracker", "Retry Config",
-            "Email Preview", "Logs", "Themes", "Developer"
+            "Email Stats", "Logs", "Themes", "About Me"
         ])
-        self.sidebar.setFixedWidth(200)
-        self.sidebar.currentRowChanged.connect(self.display_panel)
+        self.sidebar.setFixedWidth(180)
+        self.sidebar.currentRowChanged.connect(self.switch_panel)
         main_layout.addWidget(self.sidebar)
 
-        # Main area: changes based on selected sidebar panel
+        # Main content panels
         self.panels = QStackedWidget()
         main_layout.addWidget(self.panels)
 
-        # Attach all panels (loaded as separate widget builders)
+        # Add pages
         self.panels.addWidget(self.home_panel())
         self.panels.addWidget(self.tracker_panel())
         self.panels.addWidget(self.retry_panel())
         self.panels.addWidget(self.email_panel())
         self.panels.addWidget(self.logs_panel())
         self.panels.addWidget(self.themes_panel())
-        self.panels.addWidget(self.developer_panel())
+        self.panels.addWidget(self.about_panel())
 
+        # Init logging console
+        self.logger_box = QPlainTextEdit()
+        self.logger_box.setReadOnly(True)
+        log_handler = LogHandler(self.logger_box)
+        log_handler.setFormatter(logging.Formatter("[%(asctime)s] %(message)s", "%H:%M:%S"))
+        logging.getLogger().addHandler(log_handler)
+        logging.getLogger().setLevel(logging.INFO)
 
-# Home panel with the main Start button
+    def switch_panel(self, index):
+        self.panels.setCurrentIndex(index)
+
     def home_panel(self):
         panel = QWidget()
         layout = QVBoxLayout()
-        label = QLabel("🚀 Start New Account Creation")
-        start_button = QPushButton("Start Account Creation (Headless Tabs)")
-        start_button.clicked.connect(self.start_account_creation)  # Triggers automation
-        layout.addWidget(label)
-        layout.addWidget(start_button)
+        layout.addWidget(QLabel("🧠 Facebook Automation"))
+        start_btn = QPushButton("▶️ Start Account Creation")
+        start_btn.clicked.connect(self.start_automation)
+        layout.addWidget(start_btn)
         panel.setLayout(layout)
         return panel
 
-    # Tracker panel: displays static tracker status messages
     def tracker_panel(self):
         panel = QWidget()
         layout = QVBoxLayout()
-        layout.addWidget(QLabel("✅ Account Created Successfully"))
-        layout.addWidget(QLabel("❌ OTP Verification Failed – Retrying..."))
+        layout.addWidget(QLabel("✅ Created accounts will be shown here."))
+        layout.addWidget(QLabel("❌ Failed attempts and retry stats."))
         panel.setLayout(layout)
         return panel
 
-    # Retry configuration panel
     def retry_panel(self):
         panel = QWidget()
         layout = QVBoxLayout()
-        layout.addWidget(QLabel("Max Attempts:"))
+
+        layout.addWidget(QLabel("🔁 Max Retry Attempts:"))
         self.attempts_spin = QSpinBox()
         self.attempts_spin.setValue(3)
         layout.addWidget(self.attempts_spin)
 
-        layout.addWidget(QLabel("Delay (sec):"))
+        layout.addWidget(QLabel("⏱️ Delay Between Retries (seconds):"))
         self.delay_spin = QSpinBox()
         self.delay_spin.setValue(30)
         layout.addWidget(self.delay_spin)
 
-        self.fallback_checkbox = QCheckBox("Enable Fallback")
+        layout.addWidget(QLabel("🗂️ Max Parallel Tabs:"))
+        self.tabs_slider = QSpinBox()
+        self.tabs_slider.setValue(3)
+        self.tabs_slider.setRange(1, 5)
+        layout.addWidget(self.tabs_slider)
+
+        self.fallback_checkbox = QCheckBox("🧪 Enable Fallback Retry")
+        self.fallback_checkbox.setChecked(True)
         layout.addWidget(self.fallback_checkbox)
+
+        self.headless_checkbox = QCheckBox("🎭 Run in Headless Mode")
+        self.headless_checkbox.setChecked(True)
+        layout.addWidget(self.headless_checkbox)
+
         panel.setLayout(layout)
         return panel
 
-    # Email preview panel — shows current Gmail account being used
     def email_panel(self):
         panel = QWidget()
         layout = QVBoxLayout()
-        layout.addWidget(QLabel("📧 Current Email: demo@example.com"))
-        layout.addWidget(QLabel("🟡 App Password: ✅ Enabled"))
-        layout.addWidget(QLabel("🔄 Status: Not Used"))
+        layout.addWidget(QLabel("📧 Gmail Usage Stats will be shown here."))
+        refresh_btn = QPushButton("🔄 Refresh Stats")
+        refresh_btn.clicked.connect(self.show_email_stats)
+        layout.addWidget(refresh_btn)
         panel.setLayout(layout)
         return panel
 
-    # Logs panel — real-time logs + Export button
     def logs_panel(self):
         panel = QWidget()
         layout = QVBoxLayout()
-        layout.addWidget(QLabel("📜 Real-time logs will appear here..."))
+        layout.addWidget(QLabel("📜 Live Logs Console"))
+        layout.addWidget(self.logger_box)
 
-        # QPlainTextEdit for live logging
-        self.log_output = QPlainTextEdit()
-        self.log_output.setReadOnly(True)
-        layout.addWidget(self.log_output)
-
-        # Export logs to JSON
-        export_button = QPushButton("Export Logs to JSON")
-        export_button.clicked.connect(self.export_logs)
-        layout.addWidget(export_button)
-
+        export_btn = QPushButton("💾 Export Logs to JSON")
+        export_btn.clicked.connect(self.export_logs)
+        layout.addWidget(export_btn)
         panel.setLayout(layout)
         return panel
 
-
-# Themes panel — Toggle Light/Dark mode
     def themes_panel(self):
         panel = QWidget()
         layout = QVBoxLayout()
-        self.theme_toggle = QCheckBox("Toggle Dark Mode")
+        self.theme_toggle = QCheckBox("🌓 Toggle Dark Mode")
         self.theme_toggle.stateChanged.connect(self.toggle_theme)
         layout.addWidget(self.theme_toggle)
         panel.setLayout(layout)
         return panel
 
-    # Developer panel — Shows Telegram contact and quote
-    def developer_panel(self):
+    def about_panel(self):
         panel = QWidget()
         layout = QVBoxLayout()
-        link = QLabel('<a href="https://t.me/uKnowMehedi">🔗 Telegram: @uKnowMehedi</a>')
-        link.setOpenExternalLinks(True)
-        layout.addWidget(link)
-        layout.addWidget(QLabel("🤓 Smart work will give you a better opportunity."))
+        dev_label = QLabel('Developed by <a href="https://t.me/uKnowMehedi">@uKnowMehedi</a>')
+        dev_label.setOpenExternalLinks(True)
+        layout.addWidget(dev_label)
+        layout.addWidget(QLabel("🐰 Automation for Smart Fighters"))
         panel.setLayout(layout)
         return panel
 
-    # Switch active panel when sidebar selection changes
-    def display_panel(self, index):
-        self.panels.setCurrentIndex(index)
-
-    # Toggle Light/Dark Theme using checkbox
     def toggle_theme(self, state):
         if state == Qt.CheckState.Checked.value:
-            self.setStyleSheet("background-color: #2e2e2e; color: white;")
+            self.setStyleSheet("background-color: #1e1e1e; color: white;")
         else:
             self.setStyleSheet("background-color: #f0f0f0; color: black;")
 
-    # ▶️ START Automation button is clicked
-    def start_account_creation(self):
-        print("▶️ Starting account creation with headless tabs...")
-
+    def start_automation(self):
+        # Collect GUI config
         from controllers.automation import start_account_creation
-        from PyQt6.QtWidgets import QMessageBox
-        import threading
-        from controllers.export_logs import export_results
-        import logging
+        headless = self.headless_checkbox.isChecked()
+        max_tabs = self.tabs_slider.value()
+        max_attempts = self.attempts_spin.value()
+        delay = self.delay_spin.value()
+        fallback = self.fallback_checkbox.isChecked()
 
-        # Setup logging format
-        logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(message)s', datefmt='%H:%M:%S')
+        # Launch automation in background
+        threading.Thread(
+            target=start_account_creation,
+            kwargs={
+                "headless": headless,
+                "max_tabs": max_tabs,
+                "max_attempts": max_attempts,
+                "delay": delay,
+                "fallback_enabled": fallback
+            },
+            daemon=True
+        ).start()
 
-        # Will launch automation in background (next step)
-
-    # Export logs manually from Logs panel button
     def export_logs(self):
-        from PyQt6.QtWidgets import QMessageBox
-        # Dummy sample data — can be replaced with real runtime stats
-        success = ["user123456"]
+        from controllers.export_logs import export_results
+        # Dummy data — Replace with live session logs
+        success = ["user123"]
         failed = ["Tab 1"]
         emails = ["demo@gmail.com"]
-        success_path, failed_path, email_path = export_results(success, failed, emails)
+        paths = export_results(success, failed, emails)
 
         msg = QMessageBox()
-        msg.setWindowTitle("Export Complete")
-        msg.setText(f"✅ Exported to:\n{success_path}\n{failed_path}")
+        msg.setWindowTitle("Export Done")
+        msg.setText(f"📦 Logs exported to:\n{paths[0]}\n{paths[1]}")
         msg.exec()
 
-# Read all config values from GUI before launching automation
-            max_attempts = self.attempts_spin.value()
-            delay = self.delay_spin.value()
-            fallback = self.fallback_checkbox.isChecked()
+    def show_email_stats(self):
+        from utils.real_email_loader import get_email_usage_stats
+        get_email_usage_stats()
 
-            # Start automation with user settings
-            created, failed = start_account_creation(
-                headless=headless,
-                max_tabs=max_tabs,
-                max_attempts=max_attempts,
-                delay=delay,
-                fallback_enabled=fallback
-            )
-
-            # Show popup when automation is done
-            msg = QMessageBox()
-            msg.setWindowTitle("Automation Complete")
-            msg.setText(f"✅ Created: {len(created)}\n❌ Failed: {len(failed)}")
-            msg.exec()
-
-        # Launch automation in a background thread (non-blocking)
-        threading.Thread(target=run_automation).start()
-
-
-# 🟢 Start the GUI Application
-app = QApplication(sys.argv)
-window = MainWindow()
-window.show()
-sys.exit(app.exec())
+# Launch the App
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())

@@ -17,7 +17,9 @@ def run_bulk_creation(config, st=None, progress=None):
         if st: st.warning("No more Gmail accounts left!")
         return {"stats": stats}
 
-    for i in range(min(max_tabs, len(EMAILS))):
+    total_tabs = min(max_tabs, len(EMAILS))
+    for i in range(total_tabs):
+        email_line = EMAILS[i]
         loop.run_until_complete(create_account(
             tab_id=i + 1,
             headless=headless,
@@ -25,19 +27,13 @@ def run_bulk_creation(config, st=None, progress=None):
             st=st,
             progress=progress,
             index=i,
-            total=min(max_tabs, len(EMAILS)),
-            email_line=EMAILS[i]
+            total=total_tabs,
+            email_line=email_line
         ))
     return {"stats": stats}
 
 async def create_account(tab_id, headless, stats, st, progress, index, total, email_line):
     try:
-        email, app_pass = email_line.split("|")
-        print("LOADED EMAILS:", EMAILS)
-        if not EMAILS:
-            if st: st.warning("No more Gmail accounts left!")
-            return
-        email_line = random.choice(EMAILS)
         email, app_pass = email_line.split("|")
         first, last = get_random_name()
         day, month, year = get_random_dob()
@@ -61,7 +57,7 @@ async def create_account(tab_id, headless, stats, st, progress, index, total, em
             await page.select_option('select[name="birthday_day"]', str(day))
             await page.select_option('select[name="birthday_month"]', month)
             await page.select_option('select[name="birthday_year"]', str(year))
-            await page.click('input[value="2"]')
+            await page.click('input[value="2"]')  # Gender
             await page.click('button[name="websubmit"]')
 
             stats["signup"]["success"] += 1
@@ -84,6 +80,7 @@ async def create_account(tab_id, headless, stats, st, progress, index, total, em
                 f.write(f"{email}|{password}\n")
             if st: st.success(msg)
             if progress: progress.progress((index+1)/total)
+
     except Exception as e:
         mark_email(email_line, "failed")
         stats["signup"]["failure"] += 1

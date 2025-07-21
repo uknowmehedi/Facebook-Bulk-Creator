@@ -1,3 +1,4 @@
+Automate Facebook Account Creation in Bulk
 account_creator/
 ├── main.py                       # ✅ GUI Launcher (PyQt6)
 │                                 # - Sidebar navigation

@@ -69,13 +69,13 @@ elif page == "Retry Stats":
 
 elif page == "Logs":
     st.title("📜 Real-Time Logs")
-    if os.path.exists(LOG_FILE):
-        with open(LOG_FILE, "r") as f:
-            logs = f.read().splitlines()[-50:]
-            for line in logs:
-                st.text(line)
-    else:
-        st.info("No logs yet.")
+    #if os.path.exists(LOG_FILE):
+    #    with open(LOG_FILE, "r") as f:
+    #        logs = f.read().splitlines()[-50:]
+    #        for line in logs:
+    #            st.text(line)
+    #else:
+    #    st.info("No logs yet.")
 
     st.subheader("📧 Gmail Usage Status")
     col1, col2, col3 = st.columns(3)
@@ -111,7 +111,7 @@ elif page == "About Me":
     st.title("👤 About Developer")
     st.markdown("""
     **Rabbit Fighter**  
-    🧠 Automation Enthusiast | Telegram Bot Builder  
+    🧠 Automation Builder  
     📬 Telegram: [@uKnowMehedi](https://t.me/uKnowMehedi)
     """)
     st.caption("Facebook Bulk Creator GUI | Powered by Streamlit")

@@ -30,9 +30,9 @@ def run_bulk_creation(config, st=None, progress=None):
         ))
     return {"stats": stats}
 
-async def create_account(tab_id, headless, stats, st, progress, index, total):
+async def create_account(tab_id, headless, stats, st, progress, index, total, email_line):
     try:
-        EMAILS = load_emails()
+        email, app_pass = email_line.split("|")
         print("LOADED EMAILS:", EMAILS)
         if not EMAILS:
             if st: st.warning("No more Gmail accounts left!")

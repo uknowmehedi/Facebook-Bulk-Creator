@@ -2,8 +2,8 @@ account_creator/
 ├── main.py                       # ✅ GUI Launcher (PyQt6)
 │                                 # - Sidebar navigation
 │                                 # - Headless toggle, retry panel
-│                                 # - Real-time GUI log viewer
-│                                 # - Starts account creation loop
+│                                 # - GUI UX & UI Designe Launcher
+│                                 # - Start Create Account loop
 │
 ├── requirements.txt              # 📦 Python dependencies
 │                                 # - PyQt6, Playwright, IMAP, etc.
@@ -15,14 +15,14 @@ account_creator/
 ├── assets/                       # 📥 Input Files
 │   ├── names.json                # - First name list for random name generation
 │   └── gmail_address.txt         # - Gmail address | App Password (one per line)
+example: camcikadot@gmail.com | oaxwmycvlptaulkt
+hechkide3@gmail.com | iacw bcwm cexi arty
 │
 ├── logs/                         # 🗂️ Output folder (auto-created)
 │   ├── success_accounts_*.json  # - Successfully created accounts
-│   ├── failed_accounts_*.json   # - Failed attempts
-│   └── used_emails_*.json       # - Used Gmail log (optional)
 │
 ├── controllers/                  # 🧠 Core Logic Files
 │   ├── automation.py             # - Infinite Facebook signup loop (5 tabs/batch)
 │   │                             # - Uses Playwright and OTP integration
 │   ├── gmail_otp_reader.py       # - IMAP Gmail OTP fetcher
-│   └── export_logs.py            # - Writes JSON export of success/fail data
+│   └── 2captcha.py            # - Bypass captha verification

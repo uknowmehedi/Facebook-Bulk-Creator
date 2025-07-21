@@ -27,4 +27,5 @@ hechkide3@gmail.com | iacw bcwm cexi arty
 │   ├── automation.py             # - Infinite Facebook signup loop (5 tabs/batch)
 │   │                             # - Uses Playwright and OTP integration
 │   ├── gmail_otp_reader.py       # - IMAP Gmail OTP fetcher
+│   ├── user_agent.py             # - isolate fingerprint multi windows, MacOs, IOS, Linux, Android
 │   └── 2captcha.py            # - Bypass captha verification

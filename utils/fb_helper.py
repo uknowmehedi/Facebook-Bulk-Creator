@@ -11,8 +11,23 @@ def run_bulk_creation(config, st=None, progress=None):
     max_tabs = config.get("max_tabs", 3)
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    for i in range(max_tabs):
-        loop.run_until_complete(create_account(i + 1, headless, stats, st, progress, i, max_tabs))
+
+    EMAILS = load_emails()
+    if not EMAILS:
+        if st: st.warning("No more Gmail accounts left!")
+        return {"stats": stats}
+
+    for i in range(min(max_tabs, len(EMAILS))):
+        loop.run_until_complete(create_account(
+            tab_id=i + 1,
+            headless=headless,
+            stats=stats,
+            st=st,
+            progress=progress,
+            index=i,
+            total=min(max_tabs, len(EMAILS)),
+            email_line=EMAILS[i]
+        ))
     return {"stats": stats}
 
 async def create_account(tab_id, headless, stats, st, progress, index, total):

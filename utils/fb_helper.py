@@ -12,8 +12,10 @@ def run_bulk_creation(config, st=None, progress=None):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
+    async def create_account(...):
+    ...
     EMAILS = load_emails()
-    if not EMAILS:
+    print("📨 Loaded Emails:", EMAILS)
         if st: st.warning("No more Gmail accounts left!")
         return {"stats": stats}
 

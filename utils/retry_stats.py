@@ -4,7 +4,6 @@ STATS_FILE = "logs/retry_stats.json"
 def init_stats():
     return {
         "signup": {"success": 0, "failure": 0, "last_error": ""},
-        "otp": {"success": 0, "failure": 0, "last_error": ""}
     }
 
 def load_stats():

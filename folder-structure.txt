@@ -1,4 +1,5 @@
 Automate Facebook Account Creation in Bulk
+Automate account registration with custom or random usernames/passwords. AI automatically fills forms, handles CAPTCHA, and simulates human-like behaviors
 account_creator/
 ├── main.py                       # ✅ GUI Launcher (PyQt6)
 │                                 # - Sidebar navigation

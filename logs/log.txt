@@ -1,1 +1,4 @@
-
+def log_message(msg):
+    os.makedirs("logs", exist_ok=True)  # Ensure logs/ folder exists
+    with open("logs/log.txt", "a") as f:
+        f.write(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}\n")
